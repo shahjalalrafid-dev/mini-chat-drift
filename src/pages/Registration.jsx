@@ -20,7 +20,7 @@ const Registration = () => {
                 <div className='w-[90%] lg:w-[70%]'>
                 <TextField className=' w-full mb-8!' id="outlined-basic" label="Full Name" variant="outlined" />
                 </div>
-                <Button variant="contained" className='px-[150px]! py-5! rounded-full! '>Sign Up</Button>
+                <Button variant="contained" className='w-[70%]! py-5! rounded-full! '>Sign Up</Button>
                 <p className='mt-10 text-left ml-15'>Already have an account ? <span className='text-orange-400 font-bold cursor-pointer' >Sign In</span> </p>
             </div>
             <div>

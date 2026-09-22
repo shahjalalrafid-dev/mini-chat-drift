@@ -20,8 +20,11 @@ const Registration = () => {
                 <div className='w-[90%] lg:w-[70%]'>
                 <TextField className=' w-full mb-8!' id="outlined-basic" label="Full Name" variant="outlined" />
                 </div>
-                <Button variant="contained" className='w-[70%]! py-5! rounded-full! '>Sign Up</Button>
-                <p className='mt-10 text-left ml-15'>Already have an account ? <span className='text-orange-400 font-bold cursor-pointer' >Sign In</span> </p>
+                
+                <Button variant="contained" className='w-[70%]! py-5! ml-15! lg:ml-0! rounded-full!'>Sign Up</Button>
+                
+                
+                <p className='mt-10 text-left ml-17 '>Already have an account ? <span className='text-orange-400 font-bold cursor-pointer' >Sign In</span> </p>
             </div>
             <div>
                 <img className='w-full h-screen object-cover' src= {RegistrationImage} alt="Registration Image" />

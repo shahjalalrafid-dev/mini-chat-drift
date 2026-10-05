@@ -3,8 +3,12 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import RegistrationImage from '../assets/registration.png'
 import { FaGoogle } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+  import { ToastContainer, toast } from 'react-toastify';
 const Login = () => {
+  const auth = getAuth();
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -15,7 +19,7 @@ const Login = () => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   let lowerCase = /^(?=.*[a-z])/
   let upperCase = /(?=.*[A-Z])/
-  let min = /[A-Za-z\d@$!%*?&]{8,}$/
+  let min = /^[A-Za-z\d@$!%*?&#]{8,}$/;
   let special = /(?=.*[@$!%*?&])/
   let digit = /(?=.*\d)/
   const handleSignUp = () => {
@@ -42,9 +46,27 @@ const Login = () => {
     else if (!digit.test(password)) {
       setPasswordError("Ensure at least one digit");
     }
-    
+
     if (email && password) {
-      console.log("created Account");
+      signInWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in 
+          setTimeout(() => {
+            navigate('/home');
+          }, 1000);
+          toast.success("Login Successfully");
+          
+
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          if(errorCode.includes("auth/invalid-credential")){
+            toast.error("Invalid Credintials");
+          }else if (errorCode.includes("auth/too-many-requests")){
+            toast.error("try after 2 minutes");
+          }
+        });
     }
   }
   const handleEmail = (e) => {
@@ -65,6 +87,7 @@ const Login = () => {
 
   return (
     <div className='container mx-auto px-7'>
+       <ToastContainer />
       <div className='flex justify-center gap-17 lg:flex-row flex-col'>
         <div className='my-auto'>
           <h1 className='font-nunito font-bold text-4xl text-[#11175D] text-center lg:text-left'>Log in to Your Account</h1>
@@ -87,12 +110,12 @@ const Login = () => {
 
             }
           </div>
-          
+
 
           <Button variant="contained" className='w-[90%]! mt-8!  py-5! rounded-full!' onClick={handleSignUp}>Log in to Continue</Button>
 
 
-          <p className='mt-10 text-center '>Don't have an account ? <Link to= '/' ><span className='text-orange-400 font-bold cursor-pointer' >Sign Up</span> </Link> </p>
+          <p className='mt-10 text-center '>Don't have an account ? <Link to='/' ><span className='text-orange-400 font-bold cursor-pointer' >Sign Up</span> </Link> </p>
         </div>
         <div>
           <img className='w-full h-screen object-cover' src={RegistrationImage} alt="Registration Image" />

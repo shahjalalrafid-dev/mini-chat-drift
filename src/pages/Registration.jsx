@@ -3,7 +3,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import RegistrationImage from '../assets/registration.png'
 import { Link, useNavigate } from 'react-router-dom';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { ToastContainer, toast } from 'react-toastify';
 import { Audio } from 'react-loader-spinner'
 
@@ -21,7 +21,7 @@ const Registration = () => {
     let lowerCase = /^(?=.*[a-z])/
     let upperCase = /(?=.*[A-Z])/
     let min = /^[A-Za-z\d@$!%*?&#]{8,}$/;
-    let special = /(?=.*[@$!%*?&])/
+    let special = /(?=.*[@$!%*?&#])/
     let digit = /(?=.*\d)/
     const handleSignUp = () => {
         if (!email) {
@@ -55,20 +55,30 @@ const Registration = () => {
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
                     // Signed up 
-                    navigate('/login');
+                    sendEmailVerification(auth.currentUser);
                     toast.success("registration successfully");
+                     navigate('/login');
+                    
                     setLoader(false);
+                   
+                        
+                })
+
+                   
 
                     // ...
-                })
+              
                 .catch((error) => {
                     const errorCode = error.code;
 
                     // ..
+                    setLoader(false);
                     console.log(errorCode);
                     if (errorCode.includes("auth/email-already-in-use")) {
                         setEmailError("Email Already Used");
+
                     }
+
 
                 });
 
@@ -109,7 +119,7 @@ const Registration = () => {
                     </div>
 
                     <div className='w-[90%] lg:w-[90%]'>
-                        <TextField onChange={handlePassword} className=' mt-2! w-full' id="outlined-basic" label="Password" variant="outlined" />
+                        <TextField onChange={handlePassword} className=' mt-2! w-full' id="outlined-basic" label="Password" variant="outlined" type='password' />
                         {
                             passwordError && <p className='bg-red-500 text-white py-2 px-1'>{passwordError}</p>
 
@@ -124,18 +134,18 @@ const Registration = () => {
                     </div>
                     {
                         loader ? <Audio
-                        height="80"
-                        width="80"
-                        color="#4fa94d"
-                        ariaLabel="audio-loading"
-                        wrapperStyle={{}}
-                        wrapperClass="wrapper-class"
-                        visible={true}
-                    /> : <Button variant="contained" className='w-[90%]! mt-8!  py-5! rounded-full!' onClick={handleSignUp}>Sign Up</Button>
+                            height="80"
+                            width="80"
+                            color="#4fa94d"
+                            ariaLabel="audio-loading"
+                            wrapperStyle={{}}
+                            wrapperClass="wrapper-class"
+                            visible={true}
+                        /> : <Button variant="contained" className='w-[90%]! mt-8!  py-5! rounded-full!' onClick={handleSignUp}>Sign Up</Button>
                     }
 
-                    
-                    
+
+
 
 
                     <p className='mt-10 text-center '>Already have an account ? <Link to='/login' ><span className='text-orange-400 font-bold cursor-pointer' >Sign In</span></Link>  </p>
